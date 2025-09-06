@@ -19,17 +19,38 @@ They are safe to work around humans, easy to program, and flexible for multiple 
 * ✅ **Easy integration with grippers, vision, and PLCs**
 * ✅ **Safe for collaborative environments**
 
-📸 Example photo of JAKA cobot in use:
+📸 Example photos of JAKA cobot in use:
 
-```markdown
-![JAKA Collaborative Robot](images/jaka-cobot-photo.jpg)
-```
+![JAKA Collaborative Robot](cobot1.jpg)  
+![JAKA Collaborative Robot](cobot2.jpg)  
+![JAKA Collaborative Robot](cobot3.jpg)
 
-📽 Demo video of JAKA in action:
+---
 
-```markdown
-[![Watch the Demo](images/video-thumbnail.png)](https://your-video-link.com)
-```
+## 🖥 JAKA Software Interface (UI)
+
+The JAKA software provides two main modes:
+
+- **Manual Operation** → Move the cobot joints or end-effector manually.  
+- **Programming** → Create sequences of movements using block-based commands.  
+
+### Manual Operation Mode
+![JAKA UI Manual](Screenshot\ 2025-08-25\ 110320.png)
+
+In this mode, you can directly move the cobot in **X, Y, Z translation** and **RX, RY, RZ rotation**, or by controlling individual joints.
+
+### Programming Mode
+![JAKA UI Programming](Screenshot\ 2025-08-25\ 125918.png)
+
+Movements can be created with drag-and-drop blocks like **MoveJ**, **MoveL**, and **Wait**, allowing quick task creation.
+
+---
+
+## 🧩 CAD Model of JAKA
+
+To better understand the cobot’s structure and mechanics, I worked with its **CAD representation**:
+
+![JAKA CAD](jakacad.png)
 
 ---
 
@@ -39,87 +60,54 @@ This project connects **theory (mechanics)** with **real-world robotics** using 
 
 ### 🎯 Objectives
 
-* Identify **links and joints** of a cobot
-* Understand **6 DOF** configuration
-* Visualize the mechanical motion
+* Identify **links and joints** of a cobot  
+* Understand **6 DOF** configuration  
+* Visualize the mechanical motion  
 
 ### 🛠 Technical Explanation
 
-* **Links**: 7 (including base as Link 0, and tool mounting as Link 7)
-* **Joints**: 6, all **rotary/revolute**
-* **Configuration**: 6-DOF serial manipulator
+* **Links**: 7 (including base as Link 0, and tool mounting as Link 7)  
+* **Joints**: 6, all **rotary/revolute**  
+* **Configuration**: 6-DOF serial manipulator  
 
-#### Links
-
-* Link 0 → Fixed Base
-* Links 1–6 → Arm segments
-* Link 7 → End-effector mount
-
-#### Joints
-
-* Base rotation joint
-* Shoulder rotation joint
-* Elbow rotation joint
-* Wrist pitch, yaw, roll joints
-
-📸 Diagram of links and joints:
-
-```markdown
-![JAKA Links & Joints](robot-mechanics/diagrams/joints-links.png)
-```
-
-📽 Mechanics demo video:
-
-```markdown
-[![Watch Mechanics Demo](robot-mechanics/demo-videos/mechanics-thumbnail.png)](https://your-mechanics-video-link.com)
-```
+📸 Diagram of links and joints:  
+![JAKA Links & Joints](jaka_links_joints_diagram.png)
 
 ---
 
 ## 2️⃣ Motion Commands – MoveJ, MoveL, MoveC
 
-Robotic motion is the **heart of cobot programming**.
-Here, we compare the three main commands:
+Robotic motion is the **heart of cobot programming**.  
+Here are the three main commands:
 
 ### 🔹 MoveJ – Joint Movement
 
-* Moves each joint to target angles (fastest).
-* Path of tool (TCP) is not straight.
-* ✅ Best for **approach, retract, repositioning**.
+* Moves each joint to target angles (fastest).  
+* Path of tool (TCP) is not straight.  
+* ✅ Best for **approach, retract, repositioning**.  
 
-📽 Demo:
-
-```markdown
-[![MoveJ Demo](motion-commands/demo-videos/movej-thumb.png)](https://your-movej-video-link.com)
-```
+![MoveJ Thumbnail](movej_thumb.png)  
+▶️ [Watch MoveJ Demo](https://drive.google.com/file/d/1vsO3cmxGxyEdyfHisvhAHMG34MEnLgcH/view?usp=sharing)
 
 ---
 
 ### 🔹 MoveL – Linear Movement
 
-* TCP moves in a **straight line** in Cartesian space.
-* Slower than MoveJ, but very precise.
-* ✅ Best for **pick & place, assembly, welding**.
+* TCP moves in a **straight line** in Cartesian space.  
+* Slower than MoveJ, but very precise.  
+* ✅ Best for **pick & place, assembly, welding**.  
 
-📽 Demo:
-
-```markdown
-[![MoveL Demo](motion-commands/demo-videos/movel-thumb.png)](https://your-movel-video-link.com)
-```
+![MoveL Thumbnail](movel_thumb.png)  
+▶️ [Watch MoveL Demo](https://drive.google.com/file/d/1LKv0oqTbGd1cUirSIOzAP2ixPQIm_Wuy/view?usp=sharing)
 
 ---
 
 ### 🔹 MoveC – Circular Movement
 
-* TCP follows a **circular arc** defined by two points.
-* ✅ Best for **arc welding, polishing**.
+* TCP follows a **circular arc** defined by two points.  
+* ✅ Best for **arc welding, polishing**.  
 
-📽 Demo:
-
-```markdown
-[![MoveC Demo](motion-commands/demo-videos/movec-thumb.png)](https://your-movec-video-link.com)
-```
-
+ 
 ---
 
 ### 🔎 Comparison Table
@@ -138,39 +126,33 @@ This is an **industrial pick & place task** performed with a **pneumatic gripper
 
 ### 🛠 Hardware Setup
 
-* JAKA Collaborative Robot
-* Pneumatic Gripper + Air Compressor
-* Sharpener (target object)
-* Fixtures & Work Table
+* JAKA Collaborative Robot  
+* Pneumatic Gripper + Air Compressor  
+* Sharpener (target object)  
+* Fixtures & Work Table  
 
-📸 Setup photo:
-
-```markdown
-![Pick and Place Setup](pick-and-place/program-screenshots/setup.png)
-```
+📸 Setup photo:  
+![Pick and Place Setup](pickplacesharpner.jpg)
 
 ---
 
 ### ⚙️ Program Flow
 
-1. **Home Position** → Safe start
-2. **Approach Position** → Move above pick object
-3. **Pick** → Gripper closes (DO = On)
-4. **Transfer Path** → MoveJ to place location
-5. **Place** → Gripper opens (DO = Off)
-6. **Retract** → Return to Home
+1. **Home Position** → Safe start  
+2. **Approach Position** → Move above pick object  
+3. **Pick** → Gripper closes (DO = On)  
+4. **Transfer Path** → MoveJ to place location  
+5. **Place** → Gripper opens (DO = Off)  
+6. **Retract** → Return to Home  
 
-📸 Program Flow Diagram:
-
-```markdown
-![Pick and Place Flow](pick-and-place/program-screenshots/flow.png)
-```
+📸 Program Flow Diagram:  
+![Pick and Place Flow](picknplace_thumb.png)
 
 ---
 
 ### 📝 Example Code (Pseudo-JAKA Script)
 
-
+```python
 MoveJ(home)
 MoveJ(pre_pick)
 MoveJ(pick)
@@ -180,13 +162,10 @@ MoveJ(pre_place)
 MoveJ(place)
 SetDO(1, OFF)  # Gripper open
 MoveJ(home)
-```
+````
 
 📽 Demo:
-
-```markdown
-[![Pick & Place Demo](pick-and-place/demo-videos/pickplace-thumb.png)](https://your-pickplace-video-link.com)
-```
+▶️ [Watch Pick and Place Demo](https://drive.google.com/file/d/1_QK3mkfCwfpWjCR7SRSeIoO2WEfEr6dQ/view?usp=sharing)
 
 ---
 
@@ -203,6 +182,8 @@ MoveJ(home)
 
 **Khushi Singh**
 Project developed during Internship @ **Acrobot Technologies Pvt. Ltd.**
+
+
 
 
 
