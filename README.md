@@ -1,190 +1,140 @@
-# 🤖 JAKA Collaborative Robot – Project Portfolio
+# 🤖 JAKA Collaborative Robot – Technical Project Portfolio
 
-Welcome to my **JAKA Cobot Project Portfolio**, where I combined everything I have learned and implemented with the **JAKA Collaborative Robot (6-DOF serial manipulator)**.
-
-This repo is designed as both a **showcase for my work** and a **practical guide** for anyone who wants to understand and replicate these projects.
+Welcome to my **JAKA Collaborative Robot Project Portfolio**, a comprehensive compilation featuring theoretical models, code implementations, and real-world integration using a **JAKA 6-DOF collaborative robotic manipulator**.
 
 ---
 
-## 🏗 About JAKA Collaborative Robot
+## 🏗 System Overview & Capabilities
 
-**JAKA (Just Always Keep Amazing)** cobots are **6-axis collaborative robots** widely used in industrial automation, assembly, and research.
-They are safe to work around humans, easy to program, and flexible for multiple tasks.
+**JAKA cobots** are 6-axis robots with full collaborative features, known for their **open architecture**, **versatile programming interfaces**, and **high precision**.  
+Key attributes include:
 
-### 🔑 Key Features:
+- **6 revolute joints** (serial, anthropomorphic configuration)
+- **Payload:** 3–12 kg (model-dependent)
+- **Repeatability:** ±0.02 mm
+- **Interface:** JAKA App UI, Python/C++ SDK, ROS, PLC/Modbus TCP support
+- **End-effector:** ISO 9409-1-50-4-M6 tool flange for grippers, vision, and sensors
 
-* ✅ **6 DOF (Degrees of Freedom)** – similar to a human arm
-* ✅ **High repeatability & accuracy**
-* ✅ **Supports multiple motion types** – Joint, Linear, Circular
-* ✅ **Easy integration with grippers, vision, and PLCs**
-* ✅ **Safe for collaborative environments**
+### Example Images
 
-📸 Example photos of JAKA cobot in use:
-
-![JAKA Collaborative Robot](cobot1.jpg)  
-![JAKA Collaborative Robot](cobot2.jpg)  
-![JAKA Collaborative Robot](cobot3.jpg)
+<p align="center">
+  <img src="cobot1.jpg" width="250">
+  <img src="cobot2.jpg" width="250">
+  <img src="cobot3.jpg" width="250">
+</p>
 
 ---
 
-## 🖥 JAKA Software Interface (UI)
+## 🖥 Software & User Interface
 
-The JAKA software provides two main modes:
+- **Manual Jog Mode:** For direct joint/Cartesian motion, TCP offset setup, and teaching.
+- **Programming Mode:** Block-based programming (`MoveJ`, `MoveL`, `MoveC`, `Wait`, `SetDO`), plus advanced scripting and logic.
 
-- **Manual Operation** → Move the cobot joints or end-effector manually.  
-- **Programming** → Create sequences of movements using block-based commands.  
-
-### Manual Operation Mode
+### UI Example (Manual)
 ![JAKA UI Manual](manualui.png)
 
-In this mode, you can directly move the cobot in **X, Y, Z translation** and **RX, RY, RZ rotation**, or by controlling individual joints.
-
-### Programming Mode
+### UI Example (Programming)
 ![JAKA UI Programming](programmingui.png)
 
-Movements can be created with drag-and-drop blocks like **MoveJ**, **MoveL**, and **Wait**, allowing quick task creation.
+---
+
+## 🧩 Robot Structure & CAD Modeling
+
+![JAKA CAD Model](jakacad.png)
+
+All link configurations are referenced to the **DH convention** for kinematic calculations.
+- **6 rotary axes** with offset parameters and reference frames.
+- For robot simulation, the CAD is integrated with kinematic libraries & tested for physical constraints.
 
 ---
 
-## 🧩 CAD Model of JAKA
+## 1️⃣ Kinematic Modeling & Calibration
 
-To better understand the cobot’s structure and mechanics, I worked with its **CAD representation**:
+### Denavit–Hartenberg (DH) Table
 
-![JAKA CAD](jakacad.png)
+| Joint (i) | θ_i | d_i [mm] | a_i [mm] | α_i [deg] | Offset |
+|-----------|:---:|:--------:|:--------:|:---------:|--------|
+| 1         | θ₁  | d₁       | a₁       | α₁        | Yes    |
+| 2         | θ₂  | d₂       | a₂       | α₂        | Yes    |
+| ...       | ... | ...      | ...      | ...       | ...    |
+| 6         | θ₆  | d₆       | a₆       | α₆        | Yes    |
 
----
+#### Homogeneous Transformation
 
-## 1️⃣ Robot Mechanics Demonstration
+Each link-to-link transform is:
 
-This project connects **theory (mechanics)** with **real-world robotics** using JAKA.
 
-### 🎯 Objectives
+Where **offset points** are applied as an additional transformation after the final (6th) joint for correctly positioning the Tool Center Point (TCP) with respect to the end flange.
 
-* Identify **links and joints** of a cobot  
-* Understand **6 DOF** configuration  
-* Visualize the mechanical motion  
+#### TCP & Offset Points
 
-### 🛠 Technical Explanation
+- The **TCP offset** is stored as a 4×4 transformation matrix or a 6D vector (X, Y, Z, Rx, Ry, Rz), crucial if your end-effector is not mounted directly at the default tool flange.
+- Offsets can be configured in the JAKA UI under **Tool Frame** setup.
 
-* **Links**: 7 (including base as Link 0, and tool mounting as Link 7)  
-* **Joints**: 6, all **rotary/revolute**  
-* **Configuration**: 6-DOF serial manipulator  
+Example (Python):
 
-📸 Diagram of links and joints:  
-![JAKA Links & Joints](jaka_links_joints_diagram.png)
-
----
-
-## 2️⃣ Motion Commands – MoveJ, MoveL, MoveC
-
-Robotic motion is the **heart of cobot programming**.  
-Here are the three main commands:
-
-### 🔹 MoveJ – Joint Movement
-
-* Moves each joint to target angles (fastest).  
-* Path of tool (TCP) is not straight.  
-* ✅ Best for **approach, retract, repositioning**.  
-
-![MoveJ Thumbnail](movej_thumb.png)  
-▶️ [Watch MoveJ Demo](https://drive.google.com/file/d/1vsO3cmxGxyEdyfHisvhAHMG34MEnLgcH/view?usp=sharing)
 
 ---
 
-### 🔹 MoveL – Linear Movement
+## 2️⃣ Motion Planning – Code & Demonstrations
 
-* TCP moves in a **straight line** in Cartesian space.  
-* Slower than MoveJ, but very precise.  
-* ✅ Best for **pick & place, assembly, welding**.  
+### MoveJ, MoveL, MoveC Examples
 
-![MoveL Thumbnail](movel_thumb.png)  
-▶️ [Watch MoveL Demo](https://drive.google.com/file/d/1LKv0oqTbGd1cUirSIOzAP2ixPQIm_Wuy/view?usp=sharing)
+**MoveJ (Joint space interpolation)**  
+[![MoveJ Demo](movej_thumb.jpg)](https://drive.google.com/file/d/1vsO3cmxGxyEdyfHisvhAHMG34MEnLgcH/view?usp=sharing)  
 
----
+**MoveL (Linear Cartesian)**  
+[![MoveL Demo](movel_thumb.jpg)](https://drive.google.com/file/d/1LKv0oqTbGd1cUirSIOzAP2ixPQIm_Wuy/view?usp=sharing)  
 
-### 🔹 MoveC – Circular Movement
-
-* TCP follows a **circular arc** defined by two points.  
-* ✅ Best for **arc welding, polishing**.  
-
- 
----
-
-### 🔎 Comparison Table
-
-| Command   | Path Type              | Speed   | Accuracy       | Use Cases                     |
-| --------- | ---------------------- | ------- | -------------- | ----------------------------- |
-| **MoveJ** | Joint interpolation    | Fastest | Not linear     | Approach, retract, reposition |
-| **MoveL** | Linear interpolation   | Medium  | Precise linear | Pick & place, assembly        |
-| **MoveC** | Circular interpolation | Medium  | Arc-precise    | Polishing, arc welding        |
+**MoveC (Circular Interpolation)**  
+Best for path following, arc or circle tasks.
 
 ---
 
-## 3️⃣ Pick and Place – Sharpener Project
+## 3️⃣ Industrial Pick & Place: Sharpener Project
 
-This is an **industrial pick & place task** performed with a **pneumatic gripper**.
+### System Diagram + Setup
 
-### 🛠 Hardware Setup
-
-* JAKA Collaborative Robot  
-* Pneumatic Gripper + Air Compressor  
-* Sharpener (target object)  
-* Fixtures & Work Table  
-
-📸 Setup photo:  
 ![Pick and Place Setup](pickplacesharpner.jpg)
 
----
+### Program Flow (Pseudo-code)
 
-### ⚙️ Program Flow
 
-1. **Home Position** → Safe start  
-2. **Approach Position** → Move above pick object  
-3. **Pick** → Gripper closes (DO = On)  
-4. **Transfer Path** → MoveJ to place location  
-5. **Place** → Gripper opens (DO = Off)  
-6. **Retract** → Return to Home  
+**Video:**  
+[![Pick and Place Demo](pickplace_thumb.jpg)](https://drive.google.com/file/d/1_QK3mkfCwfpWjCR7SRSeIoO2WEfEr6dQ/view?usp=sharing)
 
-📸 Program Flow Diagram:  
-![Pick and Place Flow](picknplace_thumb.png)
+### Offset Point Example
+
+If your gripper/tcp is offset, all pick and place points are re-calculated:
+
 
 ---
 
-### 📝 Example Code (Pseudo-JAKA Script)
+## 🚀 Integration: ROS & External Control
 
-```python
-MoveJ(home)
-MoveJ(pre_pick)
-MoveJ(pick)
-SetDO(1, ON)   # Gripper close
-MoveJ(retract)
-MoveJ(pre_place)
-MoveJ(place)
-SetDO(1, OFF)  # Gripper open
-MoveJ(home)
-````
+**JAKA SDK** provides Python/C++ API for *real-time control, monitoring, and data exchange*.  
+Advanced users can set up **ROS drivers** (`ros_jaka_driver`) for:
 
-📽 Demo:
-▶️ [Watch Pick and Place Demo](https://drive.google.com/file/d/1_QK3mkfCwfpWjCR7SRSeIoO2WEfEr6dQ/view?usp=sharing)
+- Real-time joint state feedback
+- Action servers for MoveJ/MoveL goals
+- Integration with MoveIt! for complex path planning and collision avoidance
+
+Example (Python, using JAKA SDK):
+
 
 ---
 
-## 🦺 Safety Guidelines
+## 🦺 Safety & Best Practices
 
-* Always start with **low speed mode**
-* Use **waypoints** to avoid collisions
-* Adjust pneumatic pressure to prevent damage
-* Keep safe zones around workspace
+- Enable **reduced mode** when teaching paths
+- Use **virtual fences** and **workspace monitoring**
+- Always test offset and TCP calibration before executing automated sequences
 
 ---
 
-## 👩‍💻 Author
+## 👩‍💻 Author & Acknowledgements
 
-**Khushi Singh**
-Project developed during Internship @ **Acrobot Technologies Pvt. Ltd.**
-
-
-
-
+**Khushi Singh** – Internship @ Acrobot Technologies Pvt. Ltd.  
+Special thanks to the Acrobot robotics team for technical mentorship.
 
 
