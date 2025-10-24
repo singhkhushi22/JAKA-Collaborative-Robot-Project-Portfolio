@@ -35,12 +35,12 @@ The JAKA software provides two main modes:
 - **Programming** → Create sequences of movements using block-based commands.  
 
 ### Manual Operation Mode
-![JAKA UI Manual](Screenshot\ 2025-08-25\ 110320.png)
+![JAKA UI Manual](manualui.png)
 
 In this mode, you can directly move the cobot in **X, Y, Z translation** and **RX, RY, RZ rotation**, or by controlling individual joints.
 
 ### Programming Mode
-![JAKA UI Programming](Screenshot\ 2025-08-25\ 125918.png)
+![JAKA UI Programming](programmingui.png)
 
 Movements can be created with drag-and-drop blocks like **MoveJ**, **MoveL**, and **Wait**, allowing quick task creation.
 
